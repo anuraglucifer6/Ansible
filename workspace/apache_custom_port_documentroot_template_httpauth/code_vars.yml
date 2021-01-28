@@ -1,0 +1,7 @@
+ip: 
+ bridge: "{{ ansible_facts['ens160']['ipv4']['address'] }}"
+ host_only: "{{ ansible_facts['ens192']['ipv4']['address'] }}"
+mountfolder: "/dvd"
+documentroot: "/var/www/lw"
+httpdport: 82
+passwdfile: "/etc/lw"

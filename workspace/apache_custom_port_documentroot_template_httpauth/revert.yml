@@ -1,0 +1,38 @@
+- hosts: all
+  vars_files:
+  - code_vars.yml 
+  tasks:
+  - name: "Unmount DVD"
+    mount: 
+     path: "{{ mountfolder }}"
+     state: unmounted
+
+  - name: "Delete mountfolder file"
+    file:
+     path: "{{ mountfolder }}"
+     state: absent
+
+  - name: "Delete documentroot file"
+    file:
+     path: "{{ documentroot }}"
+     state: absent
+
+  - name: "SELinux"
+    selinux:
+     policy: targeted
+     state: enforcing
+
+  - name: "Delete httpd.conf file"
+    file:
+     path: "/etc/httpd/conf.d/lw.conf"
+     state: absent
+
+  - name: "Default httpd.conf"
+    copy:
+     dest: "/etc/httpd/conf/httpd.conf" 
+     src: "httpddefault.conf"
+
+  - name: "Delete passwd file"
+    file:
+     path: "{{ passwdfile }}"
+     state: absent

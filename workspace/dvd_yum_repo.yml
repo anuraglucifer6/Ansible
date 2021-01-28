@@ -1,0 +1,28 @@
+- hosts: all
+  tasks:
+  - name: "Creating folder to be mounted upon"
+    file:
+     state: directory
+     path: "/dvd"
+
+  - name: "Mounting DVD"
+    mount:
+     src: "/dev/sr0"
+     path: "/dvd"
+     state: mounted
+     fstype: "iso9660"
+
+  - name: "Configure AppStream Repo"
+    yum_repository:
+     baseurl: "/dvd/AppStream"
+     name: "AppStream"
+     gpgcheck: no
+     description: "AppStream YUM repo from ISO file"
+
+  - name: "Configure BaseOS Repo"
+    yum_repository:
+     baseurl: "/dvd/BaseOS"
+     name: "BaseOS"
+     gpgcheck: no
+     description: "BaseOS YUM repo from ISO file"
+

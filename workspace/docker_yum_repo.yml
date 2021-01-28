@@ -1,0 +1,8 @@
+- hosts: all
+  tasks:
+  - name: "Downloading Docker Repo"
+    yum_repository:
+     baseurl: "https://download.docker.com/linux/centos/8/x86_64/stable"
+     name: "Docker"
+     gpgcheck: no
+     description: "Docker Yum Repo"

@@ -1,0 +1,6 @@
+- hosts: all
+  vars_files:
+  - code_vars.yml 
+  tasks:
+  - debug:
+     msg: "{{ ip['host_only'] }}"

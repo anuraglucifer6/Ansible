@@ -1,0 +1,73 @@
+- hosts: all
+  vars_files:
+  - code_vars.yml
+  vars_prompt:
+  - name: "mountfolder"
+    private: no
+    prompt: "Path of folder dvd will be mounted upon "
+
+  - name: "documentroot"
+    private: no
+    prompt: "Path of Document Root of Webserver "
+
+  - name: "httpdport"
+    private: no
+    prompt: "Enter the port webserver will listen/run on " 
+  tasks:
+  - name: "Creating folder to be mounted upon"
+    file:
+     state: directory
+     path: "{{ mountfolder }}"
+
+  - name: "Mounting DVD"
+    mount:
+     src: "/dev/sr0"
+     path: "{{ mountfolder }}"
+     state: mounted
+     fstype: "iso9660"
+
+  - name: "Configure AppStream Repo"
+    yum_repository:
+     baseurl: "{{ mountfolder }}/AppStream"
+     name: "AppStream"
+     gpgcheck: no
+     description: "AppStream YUM repo from ISO file"
+
+  - name: "Configure BaseOS Repo"
+    yum_repository:
+     baseurl: "{{ mountfolder }}/BaseOS"
+     name: "BaseOS"
+     gpgcheck: no
+     description: "BaseOS YUM repo from ISO file"
+
+  - name: "Installing apache service"
+    package:
+     name: "httpd"
+     state: present
+
+  - name: "Make Document Root Directory"
+    file:
+     path: "{{ documentroot }}"
+     state: directory
+
+  - name: "Configure httpd service"
+    template:
+     dest: "/etc/httpd/conf.d/lw.conf"
+     src: "lw.conf"
+
+  - name: "Configure web pages"
+    template:
+     dest: "{{ documentroot }}/index.html"
+     src: "index.html"
+
+  - name: "Start HTTP Service"
+    service:
+     name: "httpd"
+     state: restarted
+
+  - name: "Permit Traffic for HTTP"
+    firewalld:
+     port: "{{ httpdport }}/tcp"
+     permanent: yes
+     immediate: yes
+     state: enabled

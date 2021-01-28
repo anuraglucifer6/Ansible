@@ -1,0 +1,26 @@
+- name: "Configure DVD YUM"
+  import_playbook: dvd_yum_repo.yml
+
+- hosts: all
+  tasks:
+  - name: "Installing apache service"
+    package:
+     name: "httpd"
+     state: present
+
+  - name: "Configure web pages"
+    copy:
+     dest: "/var/www/html/index.html"
+     content: "apache default with ansible"
+
+  - name: "Start HTTP Service"
+    service:
+     name: "httpd"
+     state: started
+
+  - name: "Permit Traffic for HTTP"
+    firewalld:
+     port: 80/tcp
+     permanent: yes
+     immediate: yes
+     state: enabled

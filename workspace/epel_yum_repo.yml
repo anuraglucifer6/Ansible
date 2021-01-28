@@ -1,0 +1,8 @@
+- hosts: all
+  tasks:
+  - name: "Downloading EPEL Repo"
+    yum_repository:
+     baseurl: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"
+     name: "EPEL"
+     gpgcheck: no
+     description: "EPEL Yum Repo"

@@ -1,0 +1,4 @@
+authname "LW"
+authtype basic
+authuserfile {{ passwdfile }}
+require valid-user
